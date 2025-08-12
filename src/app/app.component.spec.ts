@@ -20,10 +20,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('task-dashboard');
   });
 
-  it('should render title', () => {
+  it('should render without header text (router-only shell)', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, task-dashboard');
+    expect(compiled.querySelector('h1')).toBeNull();
   });
 });

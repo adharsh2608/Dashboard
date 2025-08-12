@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+html {
+  scroll-behavior: smooth;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(180deg, #f8f9fd 0%, #ffffff 100%);
+}
+html.dark {
+  background: linear-gradient(180deg, #0b0f19 0%, #0a0a0a 100%);
+}

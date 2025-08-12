@@ -1,0 +1,8 @@
+/* Optional: Scrollbar for long task lists */
+main::-webkit-scrollbar {
+  width: 6px;
+}
+main::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}

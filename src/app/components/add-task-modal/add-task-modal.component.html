@@ -1,0 +1,24 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white p-6 rounded shadow-md w-96">
+    <h3 class="text-xl font-bold mb-4">{{ task ? 'Edit Task' : 'Add New Task' }}</h3>
+    
+    <form (ngSubmit)="createTask()" class="flex flex-col gap-2">
+      <input class="border p-2 rounded" type="text" [(ngModel)]="title" name="title" placeholder="Title" required>
+      
+      <select class="border p-2 rounded" [(ngModel)]="category" name="category">
+        <option value="Work">Work</option>
+        <option value="Personal">Personal</option>
+      </select>
+
+      <label class="inline-flex items-center gap-2 text-sm mt-2">
+        <input type="checkbox" [(ngModel)]="completed" name="completed" />
+        Mark as completed
+      </label>
+
+      <div class="flex justify-end gap-2 mt-4">
+        <button class="bg-gray-300 px-4 py-2 rounded" type="button" (click)="close.emit()">Cancel</button>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

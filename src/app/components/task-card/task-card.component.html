@@ -1,0 +1,46 @@
+<div *ngIf="task"
+  class="shadow-lg rounded-lg p-6 border-l-8 transition-all duration-300 hover:scale-[1.01]"
+  [ngClass]="{
+    'bg-orange-50 border-orange-500': task?.status === 'Pending',
+    'bg-green-50 border-green-500': task?.status === 'Completed'
+  }"
+>
+  <!-- Title -->
+  <h3 class="text-xl font-semibold mb-2 text-gray-800 flex items-center gap-2">
+    📝 {{ task?.title }}
+  </h3>
+
+  <!-- Due Date -->
+  <p class="text-gray-700 text-sm mb-1">
+    📅 <strong>Due:</strong> {{ task?.dueDate }}
+  </p>
+
+  <!-- Status -->
+  <p class="text-sm font-medium mb-4">
+    <span
+      class="inline-flex items-center px-2 py-1 rounded-full text-xs"
+      [ngClass]="{
+        'bg-orange-100 text-orange-800': task?.status === 'Pending',
+        'bg-green-100 text-green-800': task?.status === 'Completed'
+      }"
+    >
+      {{ task?.status === 'Pending' ? '⏳ Pending' : '✅ Completed' }}
+    </span>
+  </p>
+
+  <!-- Action Buttons -->
+  <div class="flex justify-between gap-2">
+    <button
+      class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-4 rounded flex items-center gap-1"
+      (click)="edit.emit(index)"
+    >
+      ✏️ Edit
+    </button>
+    <button
+      class="bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded flex items-center gap-1"
+      (click)="delete.emit(index)"
+    >
+      🗑️ Delete
+    </button>
+  </div>
+</div>

@@ -1,27 +1,94 @@
-# TaskDashboard
+# TurboPlanner (Task Management Dashboard)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
+A secure and responsive task dashboard built with Angular and TailwindCSS. Authenticated users can view, create, edit, delete, sort, filter, and reorder tasks with drag-and-drop. Includes dark/light mode, keyboard shortcuts, and basic test coverage.
 
-## Development server
+## Setup
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```bash
+# 1) Install
+npm ci
 
-## Code scaffolding
+# 2) Start dev server
+npm start
+# then open the URL printed in terminal (Angular may pick a free port if 4200 is busy)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# 3) Run unit tests
+ng test --watch=false
 
-## Build
+# 4) Production build
+npm run build
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Login (Mock Auth)
+- Username: `admin`
+- Password: `admin123`
+- On success, a mock JWT is stored in `localStorage` and attached to all HTTP requests via an interceptor as `Authorization: Bearer <token>`.
+- This is a simulated flow; no real backend verification is performed.
 
-## Running unit tests
+## Architecture Overview
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
+src/
+  app/
+    auth/
+      auth.service.ts         # Mock JWT login + token storage (SSR-safe)
+      auth.guard.ts           # Route guard checks isAuthenticated()
+      auth.interceptor.ts     # Adds Authorization header for all HTTP calls
+      login.component.ts/.html# Modal-style login UI
+    components/
+      task-dashboard/         # Main dashboard (standalone)
+        task-dashboard.component.ts/.html/.css
+        views/                # Lazy-loaded placeholders (today/upcoming/team)
+      add-task-modal/         # Reusable modal for add/edit task
+      task-card/              # Presentational card (used in tests/demo)
+    tasks/
+      task.model.ts           # Task domain model (id, title, category, completed)
+      task.service.ts         # RxJS BehaviorSubject store for tasks
+    shared/
+      theme.service.ts        # Dark/light theme toggling with persistence
+      reorder.util.ts         # Reusable array reorder helper for DnD
+  styles.css                  # Tailwind layers + dark background handling
+  main.ts                     # Bootstraps the app
+```
 
-## Running end-to-end tests
+### Component Structure
+- `TaskDashboardComponent` (standalone): orchestrates UI state (filters, sort, modal open), subscribes to `TaskService` for data, exposes actions (add/edit/delete/toggle/reorder) and keyboard shortcuts.
+- `AddTaskModalComponent` (standalone): captures task fields (`title`, `category`, `completed`) and emits created/edited tasks.
+- `TaskCardComponent` (standalone): presentational card used by tests/demo; resilient to missing inputs.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### Routing
+- `/login`: Login screen (mock auth)
+- `/dashboard`: Protected by `AuthGuard`; renders the dashboard. Child routes are lazily loaded placeholders.
 
-## Further help
+## State Management Strategy
+- Tasks: RxJS service store using `BehaviorSubject` in `TaskService`.
+  - `tasks$` observable provides a reactive stream.
+  - Methods: `addTask`, `editTask`, `deleteTask`, `toggleCompletion` push updates.
+- Theme: `ThemeService` exposes `isDark$` and persists preference; toggled via a top-right slider.
+- Auth: `AuthService` holds token in `localStorage` (guarded for SSR) and exposes `isAuthenticated()`.
+- View/UI State: Local to `TaskDashboardComponent` (`searchQuery`, filters, sort, modal visibility, keyboard shortcuts). First-letter search filter is applied client-side.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Features
+- View, create, edit, delete tasks
+- Sort by title/category/completion; filter by category; first-letter search
+- Drag-and-drop reordering
+- Completion toggle (checkbox)
+- Dark/light mode (top-right slider), persisted
+- Keyboard shortcuts:
+  - `n`: open add task
+  - `/`: focus search
+  - `Esc`: close modal or clear search
+
+## Testing
+- Run: `ng test --watch=false`
+- Coverage focuses on:
+  - `TaskService` behavior updates (store semantics)
+  - Presentational components (`TaskCardComponent`)
+  - App shell configuration
+
+## Screenshots / GIFs
+- Add screenshots or short GIFs of light/dark modes, adding/editing tasks, and drag-and-drop here.
+
+## Notes
+- The JWT is mocked to demonstrate end-to-end wiring without a backend.
+- The project uses Angular standalone components and TailwindCSS with class-based dark mode.
