@@ -86,8 +86,6 @@ src/
   - Presentational components (`TaskCardComponent`)
   - App shell configuration
 
-## Screenshots / GIFs
-- Add screenshots or short GIFs of light/dark modes, adding/editing tasks, and drag-and-drop here.
 
 ## Notes
 - The JWT is mocked to demonstrate end-to-end wiring without a backend.
